@@ -1,0 +1,21 @@
+{
+  "Comment": "Order Processing State Machine",
+  "StartAt": "ValidateOrder",
+  "States": {
+    "ValidateOrder": {
+      "Type": "Task",
+      "Resource": "${ValidateOrderFunction}",
+      "Next": "ChargePayment"
+    },
+    "ChargePayment": {
+      "Type": "Task",
+      "Resource": "${ChargePaymentFunction}",
+      "Next": "SendConfirmation"
+    },
+    "SendConfirmation": {
+      "Type": "Task",
+      "Resource": "${SendConfirmationFunction}",
+      "End": true
+    }
+  }
+}

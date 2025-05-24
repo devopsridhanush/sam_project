@@ -1,0 +1,86 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Order Processing App with Step Functions and Lambda (Python)
+
+Globals:
+  Function:
+    Timeout: 10
+    Runtime: python3.10
+
+Resources:
+
+  StartOrderFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/start_order/
+      Handler: app.lambda_handler
+      Events:
+        ApiTrigger:
+          Type: Api
+          Properties:
+            Path: /order
+            Method: post
+      Environment:
+        Variables:
+          STATE_MACHINE_ARN: !Ref OrderStateMachine
+      Policies: 
+        - Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action:
+                - states:StartExecution
+              Resource: !Ref OrderStateMachine
+
+  ValidateOrderFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/validate_order/
+      Handler: app.lambda_handler
+
+  ChargePaymentFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/charge_payment/
+      Handler: app.lambda_handler
+
+  SendConfirmationFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/send_confirmation/
+      Handler: app.lambda_handler
+
+  OrderStateMachine:
+    Type: AWS::Serverless::StateMachine
+    Properties:
+      DefinitionUri: state_machine/workflow.asl.json
+      DefinitionSubstitutions:
+        ValidateOrderFunction: !GetAtt ValidateOrderFunction.Arn
+        ChargePaymentFunction: !GetAtt ChargePaymentFunction.Arn
+        SendConfirmationFunction: !GetAtt SendConfirmationFunction.Arn
+      Role: !GetAtt StepFunctionRole.Arn
+
+  StepFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - states.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: StepFunctionPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - lambda:InvokeFunction
+                Resource: "*"
+
+Outputs:
+  ApiUrl:
+    Description: "API Gateway endpoint"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/order"
