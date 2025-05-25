@@ -1,33 +1,40 @@
 import json
 import boto3
 import os
+import random
 
 stepfunctions = boto3.client('stepfunctions')
+# For demo only; use DynamoDB for production
+otp_store = {}
 
 def lambda_handler(event, context):
     print("Received event:", event)
 
-    # Sample order details
-    order_data = {
-        "order_id": "1234",
-        "item": "Laptop",
-        "price": 1000,
-        "customer_email": "john@example.com"
-    }
+    # Parse input from API Gateway (event['body'] is a JSON string)
+    if "body" in event:
+        body = json.loads(event["body"])
+    else:
+        body = event
 
-    # Get the Step Function ARN from environment variables
-    state_machine_arn = os.environ.get("STATE_MACHINE_ARN")
+    phone_number = body.get("phone_number")
+    order_id = body.get("order_id")
+    item = body.get("item")
+    price = body.get("price")
+    customer_email = body.get("customer_email")
 
-    # Start Step Function execution
-    response = stepfunctions.start_execution(
-        stateMachineArn=state_machine_arn,
-        input=json.dumps(order_data)
-    )
+    if not phone_number:
+        return {"statusCode": 400, "body": "Phone number required"}
 
+    # Generate OTP and (simulate) send via SMS
+    otp = str(random.randint(100000, 999999))
+    otp_store[phone_number] = otp
+    print(f"Simulated sending OTP {otp} to {phone_number}")
+
+    # For demo, return OTP in response (do NOT do this in production)
     return {
         "statusCode": 200,
         "body": json.dumps({
-            "message": "Order received. Step Function started.",
-            "executionArn": response["executionArn"]
+            "message": "OTP sent to your phone number.",
+            "otp": otp  # For demo only
         }),
     }

@@ -49,6 +49,18 @@ Resources:
       CodeUri: functions/send_confirmation/
       Handler: app.lambda_handler
 
+  VerifyUserFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/verify_user/
+      Handler: app.lambda_handler
+      Events:
+        ApiVerify:
+          Type: Api
+          Properties:
+            Path: /verify
+            Method: post
+
   OrderStateMachine:
     Type: AWS::Serverless::StateMachine
     Properties:
