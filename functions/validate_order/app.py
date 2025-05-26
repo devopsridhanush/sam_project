@@ -1,6 +1,8 @@
 def lambda_handler(event, context):
     print("Validating order:", event)
 
+    #testing for deployment with CodePipeline
+
     # Simulate validation (always successful here)
     validation_result = {"is_valid": True}
 

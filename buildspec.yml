@@ -1,0 +1,18 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.10
+    commands:
+      - pip install aws-sam-cli
+  build:
+    commands:
+      - sam build --use-container
+  post_build:
+    commands:
+      - sam deploy --no-confirm-changeset --stack-name tbd-validate --capabilities CAPABILITY_IAM
+
+artifacts:
+  files:
+    - '**/*'
