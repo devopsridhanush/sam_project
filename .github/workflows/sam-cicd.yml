@@ -3,10 +3,10 @@ name: SAM CI/CD Pipeline
 on:
   push:
     branches:
-      - main
+      - main_1
   pull_request:
     branches:
-      - main
+      - main_1
 
 jobs:
   build:
