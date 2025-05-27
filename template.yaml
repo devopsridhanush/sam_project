@@ -36,18 +36,24 @@ Resources:
     Properties:
       CodeUri: functions/validate_order/
       Handler: app.lambda_handler
+      Tags:
+        Name: OrderApp
 
   ChargePaymentFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: functions/charge_payment/
       Handler: app.lambda_handler
+      Tags:
+        Name: PaymentFunction
 
   SendConfirmationFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: functions/send_confirmation/
       Handler: app.lambda_handler
+      Tags:
+        Name: SendConformationFunction
 
   VerifyUserFunction:
     Type: AWS::Serverless::Function
@@ -70,6 +76,8 @@ Resources:
         ChargePaymentFunction: !GetAtt ChargePaymentFunction.Arn
         SendConfirmationFunction: !GetAtt SendConfirmationFunction.Arn
       Role: !GetAtt StepFunctionRole.Arn
+      Tags:
+        Name: SampleStepFunction
 
   StepFunctionRole:
     Type: AWS::IAM::Role
