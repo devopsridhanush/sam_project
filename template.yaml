@@ -14,6 +14,9 @@ Resources:
     Properties:
       CodeUri: functions/start_order/
       Handler: app.lambda_handler
+      Layers: 
+        - arn:aws:lambda:us-east-1:017000801446:layer:AWSLambdaPowertoolsPythonV2:74
+        - arn:aws:lambda:us-east-1:770693421928:layer:Klayers-p310-requests:1
       Events:
         ApiTrigger:
           Type: Api
@@ -36,6 +39,9 @@ Resources:
     Properties:
       CodeUri: functions/validate_order/
       Handler: app.lambda_handler
+      Layers: 
+        - arn:aws:lambda:us-east-1:770693421928:layer:Klayers-p310-requests:1
+        - arn:aws:lambda:us-east-1:017000801446:layer:AWSLambdaPowertoolsPythonV2:74
       Tags:
         Name: OrderApp
 
@@ -44,6 +50,9 @@ Resources:
     Properties:
       CodeUri: functions/charge_payment/
       Handler: app.lambda_handler
+      Layers:
+        - arn:aws:lambda:us-east-1:770693421928:layer:Klayers-p310-numpy:1
+        - arn:aws:lambda:us-east-1:770693421928:layer:Klayers-p310-pandas:1
       Tags:
         Name: PaymentFunction
 
@@ -52,6 +61,9 @@ Resources:
     Properties:
       CodeUri: functions/send_confirmation/
       Handler: app.lambda_handler
+      Layers:
+        - arn:aws:lambda:us-east-1:770693421928:layer:Klayers-p310-numpy:1
+        - arn:aws:lambda:us-east-1:770693421928:layer:Klayers-p310-pandas:1
       Tags:
         Name: SendConformationFunction
 
