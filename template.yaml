@@ -17,6 +17,11 @@ Resources:
       Layers: 
         - arn:aws:lambda:us-east-1:017000801446:layer:AWSLambdaPowertoolsPythonV3-python310-x86_64:15
         - arn:aws:lambda:us-east-1:770693421928:layer:Klayers-p310-requests:19
+      Tags:
+        Name: Start_Order
+      AutoPublishAlias: Prod
+      AutoPublishAliasAllProperties: true
+
       Events:
         ApiTrigger:
           Type: Api
@@ -33,7 +38,12 @@ Resources:
               Action:
                 - states:StartExecution
               Resource: !Ref OrderStateMachine
-
+  StartOrderFunctionQA:
+    Type: AWS::Lambda::Alias
+    Properties:
+      Name: QA
+      FunctionName: !Ref StartOrderFunction
+      FunctionVersion: !GetAtt StartOrderFunction.Version
   ValidateOrderFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -42,8 +52,17 @@ Resources:
       Layers: 
         - arn:aws:lambda:us-east-1:770693421928:layer:Klayers-p310-requests:19
         - arn:aws:lambda:us-east-1:017000801446:layer:AWSLambdaPowertoolsPythonV3-python310-x86_64:15
+        - !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:sample_layer_powertools:15"
       Tags:
         Name: OrderApp
+      AutoPublishAlias: Prod
+      AutoPublishAliasAllProperties: true
+  ValidateOrderFunctionQA:
+    Type: AWS::Lambda::Alias
+    Properties:
+      Name: QA
+      FunctionName: !Ref ValidateOrderFunction
+      FunctionVersion: !GetAtt ValidateOrderFunction.Version
 
   ChargePaymentFunction:
     Type: AWS::Serverless::Function
@@ -55,6 +74,14 @@ Resources:
         - arn:aws:lambda:us-east-1:770693421928:layer:Klayers-p310-pandas:24
       Tags:
         Name: PaymentFunction
+      AutoPublishAlias: Prod
+      AutoPublishAliasAllProperties: true
+  ChargePaymentFunctionQA:
+    Type: AWS::Lambda::Alias
+    Properties:
+      Name: QA
+      FunctionName: !Ref ChargePaymentFunction
+      FunctionVersion: !GetAtt ChargePaymentFunction.Version
 
   SendConfirmationFunction:
     Type: AWS::Serverless::Function
@@ -64,8 +91,17 @@ Resources:
       Layers:
         - arn:aws:lambda:us-east-1:770693421928:layer:Klayers-p310-numpy:16
         - arn:aws:lambda:us-east-1:770693421928:layer:Klayers-p310-pandas:24
+        - !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:sample_layer_powertools:15"
       Tags:
         Name: SendConformationFunction
+      AutoPublishAlias: Prod
+      AutoPublishAliasAllProperties: true
+  SendConfirmationFunctionQA:
+    Type: AWS::Lambda::Alias
+    Properties:
+      Name: QA
+      FunctionName: !Ref SendConfirmationFunction
+      FunctionVersion: !GetAtt SendConfirmationFunction.Version
 
   VerifyUserFunction:
     Type: AWS::Serverless::Function
@@ -78,6 +114,14 @@ Resources:
           Properties:
             Path: /verify
             Method: post
+      AutoPublishAlias: Prod
+      AutoPublishAliasAllProperties: true
+  VerifyUserFunctionQA:
+    Type: AWS::Lambda::Alias
+    Properties:
+      Name: QA
+      FunctionName: !Ref VerifyUserFunction
+      FunctionVersion: !GetAtt VerifyUserFunction.Version
 
   OrderStateMachine:
     Type: AWS::Serverless::StateMachine
@@ -90,6 +134,8 @@ Resources:
       Role: !GetAtt StepFunctionRole.Arn
       Tags:
         Name: SampleStepFunction
+      AutoPublishAlias: Prod
+      AutoPublishAliasAllProperties: true
 
   StepFunctionRole:
     Type: AWS::IAM::Role

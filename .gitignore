@@ -4,6 +4,8 @@
 ### Linux ###
 *~
 
+.aws-sam*
+
 # temporary files which can be created if a process still has a handle open of a deleted file
 .fuse_hidden*
 
@@ -215,6 +217,7 @@ venv.bak/
 !.vscode/launch.json
 !.vscode/extensions.json
 .history
+.vs*
 
 ### Windows ###
 # Windows thumbnail cache files
