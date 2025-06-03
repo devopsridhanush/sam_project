@@ -5,7 +5,7 @@ Description: Order Processing App with Step Functions and Lambda (Python)
 Globals:
   Function:
     Timeout: 10
-    Runtime: python3.10
+    Runtime: python3.13
 
 Resources:
 
@@ -43,7 +43,8 @@ Resources:
     Properties:
       Name: QA
       FunctionName: !Ref StartOrderFunction
-      FunctionVersion: !GetAtt StartOrderFunction.Version
+      FunctionVersion: !GetAtt StartOrderFunction.Version.Version
+
   ValidateOrderFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -62,7 +63,7 @@ Resources:
     Properties:
       Name: QA
       FunctionName: !Ref ValidateOrderFunction
-      FunctionVersion: !GetAtt ValidateOrderFunction.Version
+      FunctionVersion: !GetAtt ValidateOrderFunction.Version.Version
 
   ChargePaymentFunction:
     Type: AWS::Serverless::Function
@@ -81,7 +82,7 @@ Resources:
     Properties:
       Name: QA
       FunctionName: !Ref ChargePaymentFunction
-      FunctionVersion: !GetAtt ChargePaymentFunction.Version
+      FunctionVersion: !GetAtt ChargePaymentFunction.Version.Version
 
   SendConfirmationFunction:
     Type: AWS::Serverless::Function
@@ -101,7 +102,7 @@ Resources:
     Properties:
       Name: QA
       FunctionName: !Ref SendConfirmationFunction
-      FunctionVersion: !GetAtt SendConfirmationFunction.Version
+      FunctionVersion: !GetAtt SendConfirmationFunction.Version.Version
 
   VerifyUserFunction:
     Type: AWS::Serverless::Function
@@ -121,7 +122,7 @@ Resources:
     Properties:
       Name: QA
       FunctionName: !Ref VerifyUserFunction
-      FunctionVersion: !GetAtt VerifyUserFunction.Version
+      FunctionVersion: !GetAtt VerifyUserFunction.Version.Version
 
   OrderStateMachine:
     Type: AWS::Serverless::StateMachine
@@ -134,8 +135,6 @@ Resources:
       Role: !GetAtt StepFunctionRole.Arn
       Tags:
         Name: SampleStepFunction
-      AutoPublishAlias: Prod
-      AutoPublishAliasAllProperties: true
 
   StepFunctionRole:
     Type: AWS::IAM::Role

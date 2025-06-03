@@ -19,7 +19,7 @@ resolve_s3 = true
 stack_name = "tbd-validate"
 s3_prefix = "tbd-validate"
 region = "us-east-1"
-disable_rollback = true
+disable_rollback = false
 image_repositories = []
 
 [default.package.parameters]
