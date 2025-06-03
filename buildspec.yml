@@ -11,7 +11,7 @@ phases:
       - sam build --use-container
   post_build:
     commands:
-      - sam deploy --no-confirm-changeset --stack-name tbd-validate --capabilities CAPABILITY_IAM
+      - sam deploy --no-confirm-changeset --stack-name tbd-validate --capabilities CAPABILITY_IAM --resolve-s3
 
 artifacts:
   files:
