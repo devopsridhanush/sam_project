@@ -15,7 +15,7 @@ lint = true
 [default.deploy.parameters]
 capabilities = "CAPABILITY_IAM"
 confirm_changeset = true
-resolve_s3 = true
+#resolve_s3 = true
 stack_name = "tbd-validate"
 s3_prefix = "tbd-validate"
 region = "us-east-1"
@@ -23,7 +23,7 @@ disable_rollback = false
 image_repositories = []
 
 [default.package.parameters]
-resolve_s3 = true
+#resolve_s3 = true
 
 [default.sync.parameters]
 watch = true
