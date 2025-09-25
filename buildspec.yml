@@ -12,7 +12,7 @@ phases:
   post_build:
     commands:
       - sam deploy --no-confirm-changeset --stack-name tbd-validate --capabilities CAPABILITY_IAM --resolve-s3
-
+# sample commit should be given
 artifacts:
   files:
     - '**/*'
